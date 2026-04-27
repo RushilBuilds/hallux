@@ -6,17 +6,27 @@
     {
       "rulePack": "phantom-tests",
       "file": "src/payments/__tests__/processPayment.test.ts",
-      "line": 12
+      "line": 14
     },
     {
       "rulePack": "phantom-tests",
       "file": "src/payments/__tests__/processPayment.test.ts",
-      "line": 22
+      "line": 19
     },
     {
       "rulePack": "phantom-tests",
       "file": "src/payments/__tests__/processPayment.test.ts",
-      "line": 33
+      "line": 26
+    },
+    {
+      "rulePack": "phantom-tests",
+      "file": "src/payments/__tests__/processPayment.test.ts",
+      "line": 30
+    },
+    {
+      "rulePack": "phantom-tests",
+      "file": "src/payments/__tests__/processPayment.test.ts",
+      "line": 36
     }
   ],
   "context": {

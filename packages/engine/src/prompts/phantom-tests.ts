@@ -62,7 +62,7 @@ expect(errors.length).toBeGreaterThanOrEqual(0); // always true
 - Only flag tests on lines that were ADDED in the diff
 - Only flag tests you are confident are phantom — if a test has one real assertion alongside weak ones, do not flag it
 - Integration tests and e2e tests sometimes intentionally test only for non-throwing — use judgment
-- \`.rejects.toThrow()\` and \`.rejects.toThrow(ErrorType)\` ARE meaningful assertions — they verify the promise rejects. Do not flag these as phantom tests.
+- \`.rejects.toThrow()\`, \`.rejects.toThrow(ErrorType)\`, and \`.rejects.toThrow('message')\` ARE all meaningful assertions — they prove the async function rejects. Never flag a test whose only assertion is \`await expect(fn()).rejects.toThrow()\` as phantom. This is a real check.
 - \`.not.toThrow()\` alone can be legitimate for pure functions where the absence of an error is the contract being tested — use judgment based on context.
 - Do not flag the test framework APIs themselves as fabricated methods — focus only on whether the test verifies meaningful behaviour.
 
