@@ -1,0 +1,34 @@
+name: 'Hallux PR Reviewer'
+description: 'AI-aware GitHub PR reviewer that catches hallucinated imports, phantom tests, and fabricated method calls in AI-generated code'
+author: 'hallux'
+
+branding:
+  icon: 'search'
+  color: 'blue'
+
+inputs:
+  anthropic-api-key:
+    description: 'Anthropic API key. Store this as a repository secret.'
+    required: true
+  github-token:
+    description: 'GitHub token used to post PR review comments.'
+    default: '${{ github.token }}'
+    required: false
+  enabled-rule-packs:
+    description: 'Comma-separated list of rule packs to enable. Defaults to all: hallucinated-imports,phantom-tests,fabricated-methods'
+    default: 'hallucinated-imports,phantom-tests,fabricated-methods'
+    required: false
+  min-severity:
+    description: 'Minimum severity level to report. One of: critical, high, medium, low'
+    default: 'medium'
+    required: false
+
+outputs:
+  findings_count:
+    description: 'Total number of findings at or above min-severity'
+  severity_max:
+    description: 'Highest severity finding (critical, high, medium, low, or none)'
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'
