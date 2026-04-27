@@ -52,6 +52,9 @@ useState.subscribe(fn)               // useState doesn't return subscribable
 - Third-party library methods (unless you can confirm they don't exist via check_registry + read_file of type definitions)
 - Prototype-extended methods that may be added by polyfills
 - Anything you are not at least 80% confident about
+- **Methods on objects imported from non-existent packages** — if the import itself is hallucinated (package doesn't exist on npm/PyPI), do not flag the method calls on it. That is the hallucinated-imports rule pack's responsibility. Only flag fabricated methods on objects whose type you can actually verify.
+- **Test framework and assertion APIs** — do not flag Vitest, Jest, Jasmine, or Mocha APIs such as: \`expect()\`, \`.toBe()\`, \`.toEqual()\`, \`.toThrow()\`, \`.rejects\`, \`.resolves\`, \`vi.spyOn()\`, \`vi.fn()\`, \`jest.mock()\`, \`jest.spyOn()\`, \`mockReturnValue()\`, \`mockResolvedValue()\`, \`describe()\`, \`it()\`, \`test()\`, \`beforeEach()\`, \`afterEach()\`. These are the phantom-tests rule pack's domain.
+- **Vitest/Jest spy and mock methods** — \`.mockImplementation()\`, \`.mockReturnValue()\`, \`.mockResolvedValue()\`, \`.mockRejectedValue()\` are real Vitest/Jest APIs, not fabricated methods.
 
 ## Output
 

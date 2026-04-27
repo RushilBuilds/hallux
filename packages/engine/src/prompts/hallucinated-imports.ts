@@ -35,6 +35,12 @@ Your task: analyze a pull request diff and identify imports of packages or named
 - If check_registry returns { exists: true } and you cannot confirm the named export doesn't exist, skip it
 - Be conservative: only report findings you are confident about
 
+## What is NOT your job
+
+- **Method calls on built-in types** — if someone calls \`arr.filterWhere()\` or \`str.replaceAllOccurrences()\`, that is a fabricated method on a JavaScript built-in, not a hallucinated import. Do not flag it. The fabricated-methods rule pack handles this.
+- **Method calls on objects from hallucinated packages** — if a package doesn't exist and someone calls a method on its exports, only flag the import itself. Do not create separate findings for each method call — those are consequences of the hallucinated import, not separate issues.
+- **Test framework APIs** — do not analyze test assertion or spy APIs.
+
 ## Output
 
 When done, call report_findings with your findings. Each finding must include:

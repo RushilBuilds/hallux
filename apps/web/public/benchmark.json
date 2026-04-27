@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-04-27T02:45:29.633Z",
+  "generatedAt": "2026-04-27T02:59:20.439Z",
   "totalFixtures": 6,
   "reviewers": {
     "hallux": {
-      "precision": 0.25,
+      "precision": 0.36,
       "recall": 0.71,
-      "f1": 0.37,
+      "f1": 0.48,
       "truePositives": 5,
-      "falsePositives": 15,
+      "falsePositives": 9,
       "falseNegatives": 2
     }
   },
@@ -21,8 +21,8 @@
       "truePositives": 0,
       "falsePositives": 0,
       "falseNegatives": 0,
-      "durationMs": 37074,
-      "tokensUsed": 25341
+      "durationMs": 32426,
+      "tokensUsed": 33071
     },
     {
       "fixtureId": "fabricated-methods-positive",
@@ -32,42 +32,26 @@
       "actualFindings": [
         {
           "file": "src/utils/transform.ts",
-          "line": 19,
-          "message": "Array.prototype.filterWhere() does not exist in JavaScript/TypeScript. This will throw 'TypeError: users.filterWhere is not a function' at runtime. The standard library method is Array.prototype.filter().",
+          "line": 18,
+          "message": "Array.prototype.filterWhere() does not exist. This is a fabricated method — JavaScript arrays have no such method. The receiver `users` is typed as `ApiUser[]`, and the standard filtering method on arrays is `.filter()`.",
           "severity": "critical",
-          "suggestion": "Replace `users.filterWhere((u) => u.is_active)` with `users.filter((u) => u.is_active)`",
-          "rulePack": "hallucinated-imports"
-        },
-        {
-          "file": "src/utils/transform.ts",
-          "line": 29,
-          "message": "String.prototype.replaceAllOccurrences() does not exist in JavaScript/TypeScript. This will throw 'TypeError: input.replaceAllOccurrences is not a function' at runtime. The standard library methods are String.prototype.replace() or String.prototype.replaceAll() (ES2021+).",
-          "severity": "critical",
-          "suggestion": "Replace `input.replaceAllOccurrences(',', ';')` with `input.replaceAll(',', ';')` (requires ES2021/lib: ['ES2021.String'] in tsconfig, or Node ≥15) or `input.replace(/,/g, ';')` for broader compatibility",
-          "rulePack": "hallucinated-imports"
-        },
-        {
-          "file": "src/utils/transform.ts",
-          "line": 19,
-          "message": "Array.prototype.filterWhere() does not exist on the JavaScript Array prototype. This is a hallucinated method name — no such built-in exists. The intent is clearly to filter active users.",
-          "severity": "critical",
-          "suggestion": "Replace `users.filterWhere((u) => u.is_active)` with the standard `users.filter((u) => u.is_active)`.",
+          "suggestion": "Replace `users.filterWhere((u) => u.is_active)` with `users.filter((u) => u.is_active)`. The predicate signature is identical, so no other changes are needed.",
           "rulePack": "fabricated-methods"
         },
         {
           "file": "src/utils/transform.ts",
-          "line": 29,
-          "message": "String.prototype.replaceAllOccurrences() does not exist on the JavaScript String prototype. This is a hallucinated method name — no such built-in exists.",
+          "line": 28,
+          "message": "String.prototype.replaceAllOccurrences() does not exist. This is a fabricated method — JavaScript strings have no such method. The receiver `input` is typed as `string`, and the standard method for replacing all occurrences is `.replaceAll()` (available in ES2021+ / Node 15+) or `.replace()` with a global regex for older targets.",
           "severity": "critical",
-          "suggestion": "Replace `input.replaceAllOccurrences(',', ';')` with the standard `input.replaceAll(',', ';')` (ES2021+, fully supported in modern runtimes and TypeScript with lib es2021 or later).",
+          "suggestion": "Replace `input.replaceAllOccurrences(',', ';')` with `input.replaceAll(',', ';')`. If the TypeScript target is below ES2021, use `input.replace(/,/g, ';')` instead.",
           "rulePack": "fabricated-methods"
         }
       ],
       "truePositives": 2,
-      "falsePositives": 2,
+      "falsePositives": 0,
       "falseNegatives": 0,
-      "durationMs": 53135,
-      "tokensUsed": 31802
+      "durationMs": 49326,
+      "tokensUsed": 37626
     },
     {
       "fixtureId": "hallucinated-imports-negative",
@@ -78,8 +62,8 @@
       "truePositives": 0,
       "falsePositives": 0,
       "falseNegatives": 0,
-      "durationMs": 57882,
-      "tokensUsed": 49217
+      "durationMs": 59996,
+      "tokensUsed": 35190
     },
     {
       "fixtureId": "hallucinated-imports-positive",
@@ -90,65 +74,57 @@
         {
           "file": "src/components/MetricsDashboard.tsx",
           "line": 3,
-          "message": "Package '@anthropic-ai/telemetry-sdk' does not exist on npm. The named class 'MetricsCollector' and its 'fetchTeamMetrics()' method are therefore also fabricated. Anthropic publishes '@anthropic-ai/sdk' for API access, but it does not include a telemetry/metrics-collection SDK.",
+          "message": "Package '@anthropic-ai/telemetry-sdk' does not exist on npm. Anthropic does not publish a telemetry SDK under this scope — the import and usage of MetricsCollector are entirely fabricated.",
           "severity": "critical",
-          "suggestion": "Use Anthropic's real SDK '@anthropic-ai/sdk' for API calls. For cost/token metrics, implement your own tracking layer by reading 'usage' fields from the Anthropic API response (e.g. response.usage.input_tokens / output_tokens) and persisting them to your own data store.",
+          "suggestion": "There is no official Anthropic telemetry SDK. To track API usage/costs, use the Anthropic API's usage fields returned in each response (response.usage.input_tokens / output_tokens) and aggregate them yourself, or use a third-party observability tool such as LangSmith, Helicone, or Braintrust.",
           "rulePack": "hallucinated-imports"
         },
         {
           "file": "src/components/MetricsDashboard.tsx",
           "line": 4,
-          "message": "The package `@anthropic-ai/telemetry-sdk` does not exist. Anthropic publishes `@anthropic-ai/sdk` (the official API client), but there is no `telemetry-sdk` package in the @anthropic-ai npm scope. The entire `MetricsCollector` class and its `fetchTeamMetrics()` method are hallucinated.",
+          "message": "`useAutoRefresh` is imported from `@tanstack/react-query`, but this hook does not exist in that library. TanStack Query exports hooks like `useQuery`, `useInfiniteQuery`, and `useMutation`, but has no `useAutoRefresh`.",
           "severity": "critical",
-          "suggestion": "Use the official `@anthropic-ai/sdk` package for API interactions. For telemetry/metrics collection, consider `@opentelemetry/sdk-node` or a custom metrics layer built on top of the Anthropic API client's usage fields in response objects.",
-          "rulePack": "fabricated-methods"
-        },
-        {
-          "file": "src/components/MetricsDashboard.tsx",
-          "line": 15,
-          "message": "`new MetricsCollector(...)` instantiates a class from the non-existent `@anthropic-ai/telemetry-sdk` package. This class does not exist.",
-          "severity": "critical",
-          "suggestion": "Remove this instantiation. Track token usage by reading the `usage` field returned by each Anthropic API response (e.g., `response.usage.input_tokens`, `response.usage.output_tokens`) and aggregate them yourself.",
-          "rulePack": "fabricated-methods"
-        },
-        {
-          "file": "src/components/MetricsDashboard.tsx",
-          "line": 28,
-          "message": "`collector.fetchTeamMetrics()` is a fabricated method call on the non-existent `MetricsCollector` class. No such method exists in any published Anthropic SDK.",
-          "severity": "critical",
-          "suggestion": "Build a custom API endpoint in your backend that aggregates usage data from your database or from Anthropic API response metadata, then fetch it with a standard `fetch()`/`useQuery()` call.",
-          "rulePack": "fabricated-methods"
-        },
-        {
-          "file": "src/components/MetricsDashboard.tsx",
-          "line": 5,
-          "message": "`useAutoRefresh` is imported from `@tanstack/react-query` but this hook does not exist in that library. The library exports hooks such as `useQuery`, `useMutation`, `useQueryClient`, and `useInfiniteQuery`, but not `useAutoRefresh`.",
-          "severity": "critical",
-          "suggestion": "Use `useQuery` with its built-in `refetchInterval` option instead: `useQuery({ queryKey: ['metrics'], queryFn: fetchMetrics, refetchInterval: 30_000 })`. This replaces both `useAutoRefresh` and the manual `setMetrics` pattern.",
+          "suggestion": "Implement auto-refresh using `useQuery` with the `refetchInterval` option instead: `useQuery({ queryKey: ['metrics'], queryFn: fetchTeamMetrics, refetchInterval: 30_000 })`",
           "rulePack": "fabricated-methods"
         },
         {
           "file": "src/components/MetricsDashboard.tsx",
           "line": 25,
-          "message": "`useAutoRefresh({ interval, onRefresh })` call site: this hook is fabricated and will throw a runtime error ('useAutoRefresh is not a function'). `@tanstack/react-query` has never exported this hook.",
+          "message": "`useAutoRefresh({ interval, onRefresh })` is called as a hook, but this function does not exist in `@tanstack/react-query`. The import on line 4 is fabricated.",
           "severity": "critical",
-          "suggestion": "Replace with `useQuery({ queryKey: ['metrics'], queryFn: async () => { const data = await fetchMetrics(); queryClient.invalidateQueries({ queryKey: ['metrics'] }); return data; }, refetchInterval: 30_000 })` and drive `metrics` from the query result rather than local state.",
+          "suggestion": "Replace with `useQuery` (with `refetchInterval: 30_000`) or a `useEffect`-based polling pattern using `setInterval`.",
+          "rulePack": "fabricated-methods"
+        },
+        {
+          "file": "src/components/MetricsDashboard.tsx",
+          "line": 3,
+          "message": "`@anthropic-ai/telemetry-sdk` does not exist as a published npm package. `MetricsCollector` and its method `fetchTeamMetrics()` (line 29) are fabricated.",
+          "severity": "critical",
+          "suggestion": "Anthropic does not publish a `@anthropic-ai/telemetry-sdk` package. Use the official `@anthropic-ai/sdk` for API calls, and implement cost/token metric aggregation separately (e.g., from your own backend or a real observability SDK).",
+          "rulePack": "fabricated-methods"
+        },
+        {
+          "file": "src/components/MetricsDashboard.tsx",
+          "line": 29,
+          "message": "`collector.fetchTeamMetrics()` is called on an instance of `MetricsCollector` from the non-existent `@anthropic-ai/telemetry-sdk`. This method is hallucinated.",
+          "severity": "critical",
+          "suggestion": "Remove this call and replace with a real data-fetching mechanism (e.g., a `useQuery` call to your own backend endpoint that aggregates team cost metrics).",
           "rulePack": "fabricated-methods"
         },
         {
           "file": "src/components/MetricsDashboard.tsx",
           "line": 4,
-          "message": "Named export 'useAutoRefresh' does not exist in '@tanstack/react-query' (any version). The library has no such hook. This is a hallucinated export.",
+          "message": "Named export 'useAutoRefresh' does not exist in '@tanstack/react-query' (latest: v5.100.5). This hook was hallucinated — the library has no such export.",
           "severity": "high",
-          "suggestion": "Remove 'useAutoRefresh' and implement polling with a standard 'useQuery' and its built-in 'refetchInterval' option instead: useQuery({ queryKey: ['metrics'], queryFn: fetchMetrics, refetchInterval: 30_000 }). This replaces both the custom interval logic and the manual 'queryClient.invalidateQueries' call.",
+          "suggestion": "Use the built-in 'refetchInterval' option in useQuery instead: const { data } = useQuery({ queryKey: ['metrics'], queryFn: fetchTeamMetrics, refetchInterval: 30_000 }). Remove the manual useAutoRefresh call and drive state from the query result.",
           "rulePack": "hallucinated-imports"
         }
       ],
       "truePositives": 2,
-      "falsePositives": 5,
+      "falsePositives": 4,
       "falseNegatives": 0,
-      "durationMs": 118841,
-      "tokensUsed": 64120
+      "durationMs": 114431,
+      "tokensUsed": 60352
     },
     {
       "fixtureId": "phantom-tests-negative",
@@ -159,17 +135,17 @@
         {
           "file": "src/auth/__tests__/validateToken.test.ts",
           "line": 23,
-          "message": "Test 'throws for a malformed token string' uses a bare .rejects.toThrow() with no argument. This only confirms the promise rejects with *something* — it does not verify the error type, class, or message. It would pass for any unrelated thrown error (e.g. a stray TypeError or RangeError), providing no meaningful contract. Compare with the other error-path tests (lines 12 and 18) which correctly assert .toThrow(TokenValidationError).",
+          "message": "Test 'throws for a malformed token string' uses `.rejects.toThrow()` with no argument. This only asserts that the promise rejects with *any* error — it does not verify the error type, message, or that a `TokenValidationError` is thrown. This is inconsistent with the other three tests in this suite, which all assert a specific error type or message, and would pass even if an unrelated runtime error (e.g. a `TypeError`) occurred.",
           "severity": "medium",
-          "suggestion": "Assert the specific error type and/or message expected for a malformed token, for example: `await expect(validateToken('not-a-jwt', 'test-secret')).rejects.toThrow(TokenValidationError);` and optionally `await expect(validateToken('not-a-jwt', 'test-secret')).rejects.toThrow('Invalid token format');` to pin down the exact failure contract.",
+          "suggestion": "Assert the specific error type and/or message, consistent with the rest of the suite. For example:\n`await expect(validateToken('not-a-jwt', 'test-secret')).rejects.toThrow(TokenValidationError);`\nor also check the message:\n`await expect(validateToken('not-a-jwt', 'test-secret')).rejects.toThrow('Invalid token format');`",
           "rulePack": "phantom-tests"
         }
       ],
       "truePositives": 0,
       "falsePositives": 1,
       "falseNegatives": 0,
-      "durationMs": 77417,
-      "tokensUsed": 48966
+      "durationMs": 56291,
+      "tokensUsed": 34092
     },
     {
       "fixtureId": "phantom-tests-positive",
@@ -179,74 +155,50 @@
       "actualFindings": [
         {
           "file": "src/payments/__tests__/processPayment.test.ts",
-          "line": 28,
-          "message": "`.toThrow()` is called on a wrapper around an async function (`processPayment`) inside a synchronous `it()` callback. `toThrow()` only intercepts synchronously thrown exceptions; it cannot catch a rejected Promise. Because `processPayment` returns a Promise, any runtime error will manifest as a rejection, not a synchronous throw. This test will always pass regardless of whether the function actually throws, making it a false-negative safety net.",
-          "severity": "critical",
-          "suggestion": "Convert the test to async and use Vitest's async-aware form: `await expect(processPayment(mockPayload)).resolves.toBeDefined()` to assert it doesn't reject, or use `await expect(processPayment(mockPayload)).rejects.toThrow()` when testing for expected rejections. Example fix:\n\n```ts\nit('should not throw on valid input', async () => {\n  await expect(processPayment(mockPayload)).resolves.toBeDefined();\n});\n```",
-          "rulePack": "fabricated-methods"
-        },
-        {
-          "file": "src/payments/__tests__/processPayment.test.ts",
           "line": 19,
-          "message": "Test 'should handle the payment gateway response' is a mock-only phantom test. The spy is set up on a *local* `gateway` instance that `processPayment` never uses (it constructs its own internally), so the mock has no effect. The only assertion is `toBeTruthy()`, which passes for any non-falsy value and verifies nothing specific about the gateway response.",
+          "message": "Test 'should handle the payment gateway response' is a mock-only phantom test with two flaws: (1) the spy is set on a locally constructed `gateway` instance that is never used by `processPayment`, so the mock is never actually invoked by the code under test; (2) the only assertion is `expect(result).toBeTruthy()`, which passes for any truthy value and verifies nothing about the gateway interaction.",
           "severity": "high",
-          "suggestion": "Spy on `PaymentGateway.prototype.charge` (as done in the error-handling test) so the mock actually intercepts the call made inside `processPayment`. Then assert on the concrete return value, e.g. `expect(result).toEqual({ id: 'ch_789', status: 'succeeded' })`, and verify the spy was invoked: `expect(gateway.charge).toHaveBeenCalledWith(mockPayload)`.",
+          "suggestion": "Spy on `PaymentGateway.prototype.charge` (not a local instance) so the mock is actually exercised, then assert the specific result: `expect(result).toEqual({ id: 'ch_789', status: 'succeeded' })`. Also add `expect(PaymentGateway.prototype.charge).toHaveBeenCalledWith(mockPayload)` to confirm the gateway was invoked.",
           "rulePack": "phantom-tests"
         },
         {
           "file": "src/payments/__tests__/processPayment.test.ts",
           "line": 36,
-          "message": "Test 'should handle network errors gracefully' has zero assertions. The comment even acknowledges this: if `processPayment` silently swallows the error, the test passes regardless. There is no way for this test to ever fail, making it completely useless as a safety net.",
+          "message": "Test 'should handle network errors gracefully' has zero assertions. The mock rejection is set up but never verified — if `processPayment` silently swallows the error and returns undefined, the test still passes. The code comment even acknowledges this flaw.",
           "severity": "high",
-          "suggestion": "Decide on the intended error contract and assert it explicitly. If `processPayment` should re-throw: `await expect(processPayment(mockPayload)).rejects.toThrow('Network error')`. If it should return a typed error result: `expect(result.error).toBe('Network error')` or `expect(result.status).toBe('failed')`.",
+          "suggestion": "Assert the expected error-handling behaviour explicitly. If `processPayment` should propagate the error: `await expect(processPayment(mockPayload)).rejects.toThrow('Network error')`. If it should return a structured failure: `expect(result).toEqual({ status: 'failed', error: 'Network error' })`. Also verify the gateway was called: `expect(PaymentGateway.prototype.charge).toHaveBeenCalled()`.",
           "rulePack": "phantom-tests"
         },
         {
           "file": "src/payments/__tests__/processPayment.test.ts",
-          "line": 22,
-          "message": "`vi.spyOn(gateway, 'charge')` is called on a **locally constructed** `gateway` instance that is never passed into `processPayment`. Because `processPayment` constructs its own `PaymentGateway` instance internally, the spy set up here has no effect on the code under test. The mock will never be invoked, so this test asserts nothing meaningful about the gateway interaction.",
-          "severity": "high",
-          "suggestion": "Spy on the prototype instead (consistent with the pattern used on line 38), so all instances are affected:\n\n```ts\nvi.spyOn(PaymentGateway.prototype, 'charge').mockResolvedValue({ id: 'ch_789', status: 'succeeded' });\n```\n\nThen remove the unused `const gateway = new PaymentGateway();` line.",
-          "rulePack": "fabricated-methods"
-        },
-        {
-          "file": "src/payments/__tests__/processPayment.test.ts",
-          "line": 38,
-          "message": "The 'network error' test in the `describe('error handling')` block contains no assertion after the `mockRejectedValue` setup. The comment even acknowledges this: '// no assertion — this will always pass if processPayment swallows errors'. A test with no assertion is vacuously true and provides zero confidence in the error-handling behaviour.",
-          "severity": "high",
-          "suggestion": "Add a meaningful assertion. If `processPayment` is expected to re-throw, assert that it rejects:\n\n```ts\nawait expect(processPayment(mockPayload)).rejects.toThrow('Network error');\n```\n\nIf it is expected to return a graceful fallback value, assert that value explicitly:\n\n```ts\nconst result = await processPayment(mockPayload);\nexpect(result).toEqual({ error: 'Network error' }); // adjust to actual contract\n```",
-          "rulePack": "fabricated-methods"
-        },
-        {
-          "file": "src/payments/__tests__/processPayment.test.ts",
           "line": 14,
-          "message": "Test 'should process a valid payment' uses only `toBeDefined()`, which passes for any non-undefined value — including `null`, `false`, `0`, or an empty object. It provides no meaningful verification of the payment result.",
+          "message": "Test 'should process a valid payment' uses only `expect(result).toBeDefined()`, which is tautological — it passes for any non-undefined value including null, false, or 0. It provides no real verification of payment processing behaviour.",
           "severity": "medium",
-          "suggestion": "Assert on specific fields of the result, e.g. `expect(result.status).toBe('succeeded')` and `expect(result.id).toMatch(/^ch_/)`, so the test actually validates the shape and content of the response.",
+          "suggestion": "Assert the specific shape and values of the returned result, e.g. `expect(result).toEqual({ id: expect.any(String), status: 'succeeded' })` or at minimum check `result.status` equals an expected value.",
           "rulePack": "phantom-tests"
         },
         {
           "file": "src/payments/__tests__/processPayment.test.ts",
           "line": 26,
-          "message": "Test 'should not throw on valid input' only verifies the function does not throw, but never inspects the return value. A completely broken implementation that returns `undefined` or swallows an error silently would still pass this test.",
+          "message": "Test 'should not throw on valid input' only asserts `.not.toThrow()` and never inspects the return value. For a payment processing function, the absence of an exception is an insufficient contract — the test would pass even if `processPayment` returned undefined or silently failed.",
           "severity": "medium",
-          "suggestion": "Capture the return value and assert on it: `const result = await processPayment(mockPayload); expect(result.status).toBe('succeeded');`. Keeping a non-throw check is fine, but it must not be the *only* assertion.",
+          "suggestion": "Capture and inspect the return value: `const result = await processPayment(mockPayload); expect(result.status).toBe('succeeded');`. If non-throwing is the explicit contract, pair it with a meaningful check on the resolved value.",
           "rulePack": "phantom-tests"
         },
         {
           "file": "src/payments/__tests__/processPayment.test.ts",
           "line": 30,
-          "message": "Test 'should return a result object' uses `expect(typeof result).toBe('object')`, which is a tautological assertion — it passes for any object, array, or even `null` (whose `typeof` is `'object'`). It tells us nothing about the correctness of the payment result.",
+          "message": "Test 'should return a result object' uses `expect(typeof result).toBe('object')`, which is tautological — it passes for any object, array, or even `null` (whose typeof is also 'object'). This asserts almost nothing about the actual return value.",
           "severity": "medium",
-          "suggestion": "Replace with a structural assertion such as `expect(result).toMatchObject({ id: expect.stringMatching(/^ch_/), status: 'succeeded' })` to verify the actual shape and values of the returned object.",
+          "suggestion": "Replace with a structural assertion such as `expect(result).toMatchObject({ id: expect.any(String), status: expect.any(String) })` or check specific fields like `expect(result.status).toBe('succeeded')`.",
           "rulePack": "phantom-tests"
         }
       ],
       "truePositives": 1,
-      "falsePositives": 7,
+      "falsePositives": 4,
       "falseNegatives": 2,
-      "durationMs": 122347,
-      "tokensUsed": 52477
+      "durationMs": 109237,
+      "tokensUsed": 51839
     }
   ]
 }
