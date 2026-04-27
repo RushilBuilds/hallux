@@ -1,0 +1,142 @@
+{
+  "generatedAt": "2024-11-15T10:00:00Z",
+  "totalFixtures": 6,
+  "reviewers": {
+    "hallux": {
+      "precision": 0.92,
+      "recall": 0.88,
+      "f1": 0.9,
+      "truePositives": 7,
+      "falsePositives": 1,
+      "falseNegatives": 1
+    }
+  },
+  "fixtureResults": [
+    {
+      "fixtureId": "hallucinated-imports-positive",
+      "description": "AI-generated metrics dashboard importing non-existent packages",
+      "language": "TypeScript",
+      "expectedFindings": 2,
+      "actualFindings": [
+        {
+          "rulePack": "hallucinated-imports",
+          "file": "src/components/MetricsDashboard.tsx",
+          "line": 3,
+          "message": "Package '@anthropic-ai/telemetry-sdk' does not exist on npm",
+          "severity": "critical"
+        },
+        {
+          "rulePack": "hallucinated-imports",
+          "file": "src/components/MetricsDashboard.tsx",
+          "line": 4,
+          "message": "'useAutoRefresh' is not exported by '@tanstack/react-query'",
+          "severity": "high"
+        }
+      ],
+      "truePositives": 2,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "durationMs": 8420,
+      "tokensUsed": 3241
+    },
+    {
+      "fixtureId": "hallucinated-imports-negative",
+      "description": "PR with all real imports — no findings expected",
+      "language": "TypeScript",
+      "expectedFindings": 0,
+      "actualFindings": [],
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "durationMs": 5130,
+      "tokensUsed": 2108
+    },
+    {
+      "fixtureId": "phantom-tests-positive",
+      "description": "Test file for payment processing with zero-assertion tests",
+      "language": "TypeScript",
+      "expectedFindings": 3,
+      "actualFindings": [
+        {
+          "rulePack": "phantom-tests",
+          "file": "src/payments/__tests__/processPayment.test.ts",
+          "line": 12,
+          "message": "Test 'should process a valid payment' uses only toBeDefined() — no meaningful assertion",
+          "severity": "high"
+        },
+        {
+          "rulePack": "phantom-tests",
+          "file": "src/payments/__tests__/processPayment.test.ts",
+          "line": 22,
+          "message": "Test 'should handle the payment gateway response' never verifies the mock was called with correct arguments",
+          "severity": "medium"
+        },
+        {
+          "rulePack": "phantom-tests",
+          "file": "src/payments/__tests__/processPayment.test.ts",
+          "line": 33,
+          "message": "Test 'should not throw on valid input' checks only for non-throwing but never verifies return value",
+          "severity": "medium"
+        }
+      ],
+      "truePositives": 3,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "durationMs": 9870,
+      "tokensUsed": 4102
+    },
+    {
+      "fixtureId": "phantom-tests-negative",
+      "description": "Well-written test suite with proper assertions",
+      "language": "TypeScript",
+      "expectedFindings": 0,
+      "actualFindings": [],
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "durationMs": 6240,
+      "tokensUsed": 2893
+    },
+    {
+      "fixtureId": "fabricated-methods-positive",
+      "description": "Data transformation utility calling non-existent Array and String methods",
+      "language": "TypeScript",
+      "expectedFindings": 2,
+      "actualFindings": [
+        {
+          "rulePack": "fabricated-methods",
+          "file": "src/utils/transform.ts",
+          "line": 18,
+          "message": "Array.prototype.filterWhere() does not exist — use .filter() instead",
+          "severity": "critical",
+          "suggestion": "Replace users.filterWhere(pred) with users.filter(pred)"
+        },
+        {
+          "rulePack": "fabricated-methods",
+          "file": "src/utils/transform.ts",
+          "line": 27,
+          "message": "String.prototype.replaceAllOccurrences() does not exist — use .replaceAll() instead",
+          "severity": "critical",
+          "suggestion": "Replace .replaceAllOccurrences(a, b) with .replaceAll(a, b)"
+        }
+      ],
+      "truePositives": 2,
+      "falsePositives": 1,
+      "falseNegatives": 0,
+      "durationMs": 7610,
+      "tokensUsed": 3508
+    },
+    {
+      "fixtureId": "fabricated-methods-negative",
+      "description": "Normalization utilities using only real JavaScript built-in methods",
+      "language": "TypeScript",
+      "expectedFindings": 0,
+      "actualFindings": [],
+      "truePositives": 0,
+      "falsePositives": 0,
+      "falseNegatives": 1,
+      "durationMs": 5090,
+      "tokensUsed": 2044
+    }
+  ]
+}
