@@ -85,8 +85,7 @@ async function run(): Promise<void> {
     },
     diff,
     changedFiles,
-    // repoPath is not set — tools that need file access will fail gracefully.
-    // In a future version, we'll checkout the PR head and set this.
+    repoPath: process.env['GITHUB_WORKSPACE'],
   };
 
   core.info(`[hallux] ${changedFiles.length} changed file(s), diff length: ${diff.length} chars`);
