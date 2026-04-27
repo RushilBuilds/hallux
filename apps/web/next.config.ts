@@ -1,8 +1,5 @@
 import type { NextConfig } from 'next';
 
-const nextConfig: NextConfig = {
-  // Output standalone for Docker/Vercel deployments.
-  output: 'standalone',
-};
+const nextConfig: NextConfig = {};
 
 export default nextConfig;
