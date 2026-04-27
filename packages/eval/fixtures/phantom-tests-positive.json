@@ -1,0 +1,50 @@
+{
+  "id": "phantom-tests-positive",
+  "description": "AI-generated test file for a payment processing module. Tests look thorough but none make meaningful assertions — they only call functions and check toBeDefined() or toBeTruthy().",
+  "language": "TypeScript",
+  "expectedFindings": [
+    {
+      "rulePack": "phantom-tests",
+      "file": "src/payments/__tests__/processPayment.test.ts",
+      "line": 12
+    },
+    {
+      "rulePack": "phantom-tests",
+      "file": "src/payments/__tests__/processPayment.test.ts",
+      "line": 22
+    },
+    {
+      "rulePack": "phantom-tests",
+      "file": "src/payments/__tests__/processPayment.test.ts",
+      "line": 33
+    }
+  ],
+  "context": {
+    "repo": {
+      "owner": "acme-corp",
+      "name": "platform",
+      "defaultBranch": "main",
+      "language": "TypeScript"
+    },
+    "pr": {
+      "number": 912,
+      "title": "feat: payment processing with tests",
+      "body": "Implements the payment processing pipeline and adds comprehensive test coverage.",
+      "author": "cursor-bot",
+      "baseSha": "b2c3d4e5",
+      "headSha": "f6a7b8c9",
+      "baseBranch": "main",
+      "headBranch": "feat/payment-processing"
+    },
+    "diff": "diff --git a/src/payments/__tests__/processPayment.test.ts b/src/payments/__tests__/processPayment.test.ts\nnew file mode 100644\n--- /dev/null\n+++ b/src/payments/__tests__/processPayment.test.ts\n@@ -0,0 +1,55 @@\n+import { describe, it, expect, vi } from 'vitest';\n+import { processPayment } from '../processPayment';\n+import { PaymentGateway } from '../gateway';\n+\n+vi.mock('../gateway');\n+\n+const mockPayload = {\n+  amount: 9999,\n+  currency: 'USD',\n+  customerId: 'cust_123',\n+  paymentMethodId: 'pm_456',\n+};\n+\n+it('should process a valid payment', async () => {\n+  const result = await processPayment(mockPayload);\n+  expect(result).toBeDefined();\n+});\n+\n+it('should handle the payment gateway response', async () => {\n+  const gateway = new PaymentGateway();\n+  vi.spyOn(gateway, 'charge').mockResolvedValue({ id: 'ch_789', status: 'succeeded' });\n+  const result = await processPayment(mockPayload);\n+  expect(result).toBeTruthy();\n+});\n+\n+it('should not throw on valid input', () => {\n+  expect(() => processPayment(mockPayload)).not.toThrow();\n+});\n+\n+it('should return a result object', async () => {\n+  const result = await processPayment(mockPayload);\n+  expect(typeof result).toBe('object');\n+});\n+\n+describe('error handling', () => {\n+  it('should handle network errors gracefully', async () => {\n+    vi.spyOn(PaymentGateway.prototype, 'charge').mockRejectedValue(new Error('Network error'));\n+    // no assertion — this will always pass if processPayment swallows errors\n+    await processPayment(mockPayload);\n+  });\n+});",
+    "changedFiles": [
+      {
+        "filename": "src/payments/__tests__/processPayment.test.ts",
+        "status": "added",
+        "additions": 55,
+        "deletions": 0,
+        "patch": "@@ -0,0 +1,55 @@\n+import { describe, it, expect, vi } from 'vitest';\n+import { processPayment } from '../processPayment';\n..."
+      }
+    ]
+  }
+}

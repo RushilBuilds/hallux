@@ -1,0 +1,45 @@
+{
+  "id": "fabricated-methods-positive",
+  "description": "AI-generated data transformation utility that calls Array.prototype.filterWhere() and String.prototype.replaceAllOccurrences() — neither method exists",
+  "language": "TypeScript",
+  "expectedFindings": [
+    {
+      "rulePack": "fabricated-methods",
+      "file": "src/utils/transform.ts",
+      "line": 18
+    },
+    {
+      "rulePack": "fabricated-methods",
+      "file": "src/utils/transform.ts",
+      "line": 27
+    }
+  ],
+  "context": {
+    "repo": {
+      "owner": "acme-corp",
+      "name": "platform",
+      "defaultBranch": "main",
+      "language": "TypeScript"
+    },
+    "pr": {
+      "number": 956,
+      "title": "feat: add data transformation utilities",
+      "body": "Adds helper functions for transforming API response data before storing in the Redux store.",
+      "author": "cursor-bot",
+      "baseSha": "e5f6a7b8",
+      "headSha": "c9d0e1f2",
+      "baseBranch": "main",
+      "headBranch": "feat/transform-utils"
+    },
+    "diff": "diff --git a/src/utils/transform.ts b/src/utils/transform.ts\nnew file mode 100644\n--- /dev/null\n+++ b/src/utils/transform.ts\n@@ -0,0 +1,45 @@\n+interface ApiUser {\n+  id: string;\n+  full_name: string;\n+  email_address: string;\n+  is_active: boolean;\n+  tags: string[];\n+}\n+\n+interface NormalizedUser {\n+  id: string;\n+  name: string;\n+  email: string;\n+  active: boolean;\n+  tagString: string;\n+}\n+\n+export function normalizeUsers(users: ApiUser[]): NormalizedUser[] {\n+  return users.filterWhere((u) => u.is_active).map((u) => ({\n+    id: u.id,\n+    name: u.full_name,\n+    email: u.email_address,\n+    active: u.is_active,\n+    tagString: u.tags.join(', '),\n+  }));\n+}\n+\n+export function sanitizeTagString(input: string): string {\n+  return input.replaceAllOccurrences(',', ';').trim();\n+}\n+\n+export function groupUsersByDomain(users: NormalizedUser[]): Map<string, NormalizedUser[]> {\n+  const grouped = new Map<string, NormalizedUser[]>();\n+  for (const user of users) {\n+    const domain = user.email.split('@')[1] ?? 'unknown';\n+    const existing = grouped.get(domain) ?? [];\n+    grouped.set(domain, [...existing, user]);\n+  }\n+  return grouped;\n+}",
+    "changedFiles": [
+      {
+        "filename": "src/utils/transform.ts",
+        "status": "added",
+        "additions": 45,
+        "deletions": 0,
+        "patch": "@@ -0,0 +1,45 @@\n+interface ApiUser {\n+  id: string;\n+  full_name: string;\n..."
+      }
+    ]
+  }
+}

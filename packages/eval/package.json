@@ -1,0 +1,28 @@
+{
+  "name": "@hallux/eval",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "type-check": "tsc --build --dry",
+    "eval": "node --experimental-vm-modules dist/run-eval.js",
+    "lint": "echo 'no linter configured'"
+  },
+  "dependencies": {
+    "@hallux/engine": "workspace:*",
+    "@hallux/rule-packs": "workspace:*",
+    "@hallux/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "id": "hallucinated-imports-positive",
+  "description": "AI-generated metrics dashboard component that imports a non-existent Anthropic telemetry SDK and a non-existent named export from react-query",
+  "language": "TypeScript",
+  "expectedFindings": [
+    {
+      "rulePack": "hallucinated-imports",
+      "file": "src/components/MetricsDashboard.tsx",
+      "line": 3
+    },
+    {
+      "rulePack": "hallucinated-imports",
+      "file": "src/components/MetricsDashboard.tsx",
+      "line": 4
+    }
+  ],
+  "context": {
+    "repo": {
+      "owner": "acme-corp",
+      "name": "platform",
+      "defaultBranch": "main",
+      "language": "TypeScript"
+    },
+    "pr": {
+      "number": 847,
+      "title": "feat: add AI cost metrics dashboard",
+      "body": "Adds a real-time dashboard showing Anthropic API usage costs per team. Uses the new telemetry SDK for structured metrics collection.",
+      "author": "cursor-bot",
+      "baseSha": "a1b2c3d4",
+      "headSha": "e5f6a7b8",
+      "baseBranch": "main",
+      "headBranch": "feat/ai-metrics-dashboard"
+    },
+    "diff": "diff --git a/src/components/MetricsDashboard.tsx b/src/components/MetricsDashboard.tsx\nnew file mode 100644\n--- /dev/null\n+++ b/src/components/MetricsDashboard.tsx\n@@ -0,0 +1,64 @@\n+import React, { useState } from 'react';\n+import { Card, CardContent, CardHeader } from '@/components/ui/card';\n+import { MetricsCollector } from '@anthropic-ai/telemetry-sdk';\n+import { useAutoRefresh, useQueryClient } from '@tanstack/react-query';\n+import { formatCurrency } from '../utils/format';\n+\n+interface TeamMetrics {\n+  teamId: string;\n+  teamName: string;\n+  tokensUsed: number;\n+  costUsd: number;\n+  requestCount: number;\n+}\n+\n+const collector = new MetricsCollector({\n+  apiKey: process.env.ANTHROPIC_API_KEY,\n+  flushInterval: 5000,\n+});\n+\n+export function MetricsDashboard() {\n+  const [metrics, setMetrics] = useState<TeamMetrics[]>([]);\n+  const queryClient = useQueryClient();\n+\n+  // Auto-refresh metrics every 30 seconds\n+  useAutoRefresh({\n+    interval: 30_000,\n+    onRefresh: async () => {\n+      const data = await collector.fetchTeamMetrics();\n+      setMetrics(data);\n+      queryClient.invalidateQueries({ queryKey: ['metrics'] });\n+    },\n+  });\n+\n+  const totalCost = metrics.reduce((sum, m) => sum + m.costUsd, 0);\n+\n+  return (\n+    <div className=\"grid grid-cols-3 gap-4\">\n+      <Card>\n+        <CardHeader>Total Cost (MTD)</CardHeader>\n+        <CardContent>{formatCurrency(totalCost)}</CardContent>\n+      </Card>\n+      {metrics.map((m) => (\n+        <Card key={m.teamId}>\n+          <CardHeader>{m.teamName}</CardHeader>\n+          <CardContent>\n+            <p>{m.tokensUsed.toLocaleString()} tokens</p>\n+            <p>{formatCurrency(m.costUsd)}</p>\n+          </CardContent>\n+        </Card>\n+      ))}\n+    </div>\n+  );\n+}",
+    "changedFiles": [
+      {
+        "filename": "src/components/MetricsDashboard.tsx",
+        "status": "added",
+        "additions": 64,
+        "deletions": 0,
+        "patch": "@@ -0,0 +1,64 @@\n+import React, { useState } from 'react';\n+import { Card, CardContent, CardHeader } from '@/components/ui/card';\n+import { MetricsCollector } from '@anthropic-ai/telemetry-sdk';\n+import { useAutoRefresh, useQueryClient } from '@tanstack/react-query';\n..."
+      }
+    ]
+  }
+}

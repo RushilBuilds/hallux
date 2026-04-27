@@ -1,0 +1,34 @@
+{
+  "id": "hallucinated-imports-negative",
+  "description": "PR that adds a well-written data fetching hook with all real imports from existing packages",
+  "language": "TypeScript",
+  "expectedFindings": [],
+  "context": {
+    "repo": {
+      "owner": "acme-corp",
+      "name": "platform",
+      "defaultBranch": "main",
+      "language": "TypeScript"
+    },
+    "pr": {
+      "number": 831,
+      "title": "feat: add usePaginatedUsers hook",
+      "body": "Extracts the paginated users fetch logic into a reusable hook using react-query and zod for runtime validation.",
+      "author": "alice",
+      "baseSha": "c3d4e5f6",
+      "headSha": "a7b8c9d0",
+      "baseBranch": "main",
+      "headBranch": "feat/paginated-users-hook"
+    },
+    "diff": "diff --git a/src/hooks/usePaginatedUsers.ts b/src/hooks/usePaginatedUsers.ts\nnew file mode 100644\n--- /dev/null\n+++ b/src/hooks/usePaginatedUsers.ts\n@@ -0,0 +1,52 @@\n+import { useInfiniteQuery } from '@tanstack/react-query';\n+import { z } from 'zod';\n+import axios from 'axios';\n+\n+const UserSchema = z.object({\n+  id: z.string().uuid(),\n+  name: z.string(),\n+  email: z.string().email(),\n+  role: z.enum(['admin', 'member', 'viewer']),\n+  createdAt: z.string().datetime(),\n+});\n+\n+const PageSchema = z.object({\n+  users: z.array(UserSchema),\n+  nextCursor: z.string().nullable(),\n+  total: z.number().int(),\n+});\n+\n+type User = z.infer<typeof UserSchema>;\n+type Page = z.infer<typeof PageSchema>;\n+\n+async function fetchUsers(cursor: string | null): Promise<Page> {\n+  const params = cursor ? { cursor } : {};\n+  const { data } = await axios.get('/api/users', { params });\n+  return PageSchema.parse(data);\n+}\n+\n+export function usePaginatedUsers() {\n+  return useInfiniteQuery({\n+    queryKey: ['users'],\n+    queryFn: ({ pageParam }) => fetchUsers(pageParam as string | null),\n+    initialPageParam: null,\n+    getNextPageParam: (lastPage) => lastPage.nextCursor,\n+  });\n+}",
+    "changedFiles": [
+      {
+        "filename": "src/hooks/usePaginatedUsers.ts",
+        "status": "added",
+        "additions": 52,
+        "deletions": 0,
+        "patch": "@@ -0,0 +1,52 @@\n+import { useInfiniteQuery } from '@tanstack/react-query';\n+import { z } from 'zod';\n+import axios from 'axios';\n..."
+      }
+    ]
+  }
+}

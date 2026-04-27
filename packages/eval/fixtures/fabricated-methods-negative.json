@@ -1,0 +1,33 @@
+{
+  "id": "fabricated-methods-negative",
+  "description": "PR that adds data transformation utilities using only real JavaScript/TypeScript built-in methods",
+  "language": "TypeScript",
+  "expectedFindings": [],
+  "context": {
+    "repo": {
+      "owner": "acme-corp",
+      "name": "platform",
+      "defaultBranch": "main",
+      "language": "TypeScript"
+    },
+    "pr": {
+      "number": 944,
+      "title": "feat: add user normalization helpers",
+      "body": "Adds helper utilities for normalizing API response shapes using standard built-ins.",
+      "author": "carol",
+      "baseSha": "f6a7b8c9",
+      "headSha": "d0e1f2a3",
+      "baseBranch": "main",
+      "headBranch": "feat/user-normalization"
+    },
+    "diff": "diff --git a/src/utils/normalize.ts b/src/utils/normalize.ts\nnew file mode 100644\n--- /dev/null\n+++ b/src/utils/normalize.ts\n@@ -0,0 +1,38 @@\n+interface ApiUser {\n+  id: string;\n+  full_name: string;\n+  email_address: string;\n+  is_active: boolean;\n+  tags: string[];\n+}\n+\n+interface NormalizedUser {\n+  id: string;\n+  name: string;\n+  email: string;\n+  active: boolean;\n+  tagString: string;\n+}\n+\n+export function normalizeUsers(users: ApiUser[]): NormalizedUser[] {\n+  return users\n+    .filter((u) => u.is_active)\n+    .map((u) => ({\n+      id: u.id,\n+      name: u.full_name,\n+      email: u.email_address,\n+      active: u.is_active,\n+      tagString: u.tags.join(', '),\n+    }));\n+}\n+\n+export function sanitizeTagString(input: string): string {\n+  return input.replaceAll(',', ';').trim();\n+}\n+\n+export function groupUsersByDomain(users: NormalizedUser[]): Map<string, NormalizedUser[]> {\n+  const grouped = new Map<string, NormalizedUser[]>();\n+  for (const user of users) {\n+    const domain = user.email.split('@').at(1) ?? 'unknown';\n+    const existing = grouped.get(domain) ?? [];\n+    grouped.set(domain, [...existing, user]);\n+  }\n+  return grouped;\n+}",
+    "changedFiles": [
+      {
+        "filename": "src/utils/normalize.ts",
+        "status": "added",
+        "additions": 38,
+        "deletions": 0
+      }
+    ]
+  }
+}

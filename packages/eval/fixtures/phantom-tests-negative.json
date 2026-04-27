@@ -1,0 +1,34 @@
+{
+  "id": "phantom-tests-negative",
+  "description": "PR that adds a well-written test suite for a user authentication module with proper assertions throughout",
+  "language": "TypeScript",
+  "expectedFindings": [],
+  "context": {
+    "repo": {
+      "owner": "acme-corp",
+      "name": "platform",
+      "defaultBranch": "main",
+      "language": "TypeScript"
+    },
+    "pr": {
+      "number": 891,
+      "title": "test: add auth token validation tests",
+      "body": "Adds test coverage for the token validation module.",
+      "author": "bob",
+      "baseSha": "d4e5f6a7",
+      "headSha": "b8c9d0e1",
+      "baseBranch": "main",
+      "headBranch": "test/auth-validation"
+    },
+    "diff": "diff --git a/src/auth/__tests__/validateToken.test.ts b/src/auth/__tests__/validateToken.test.ts\nnew file mode 100644\n--- /dev/null\n+++ b/src/auth/__tests__/validateToken.test.ts\n@@ -0,0 +1,58 @@\n+import { describe, it, expect } from 'vitest';\n+import { validateToken, TokenValidationError } from '../validateToken';\n+\n+describe('validateToken', () => {\n+  it('returns the decoded payload for a valid token', async () => {\n+    const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyXzEyMyIsInJvbGUiOiJhZG1pbiJ9.sig';\n+    const result = await validateToken(token, 'test-secret');\n+    expect(result.sub).toBe('user_123');\n+    expect(result.role).toBe('admin');\n+  });\n+\n+  it('throws TokenValidationError for an expired token', async () => {\n+    const expiredToken = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyXzEyMyIsImV4cCI6MX0.sig';\n+    await expect(validateToken(expiredToken, 'test-secret')).rejects.toThrow(TokenValidationError);\n+    await expect(validateToken(expiredToken, 'test-secret')).rejects.toThrow('Token expired');\n+  });\n+\n+  it('throws TokenValidationError for a token signed with the wrong secret', async () => {\n+    const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyXzEyMyJ9.badsig';\n+    await expect(validateToken(token, 'wrong-secret')).rejects.toThrow(TokenValidationError);\n+  });\n+\n+  it('throws for a malformed token string', async () => {\n+    await expect(validateToken('not-a-jwt', 'test-secret')).rejects.toThrow();\n+  });\n+});",
+    "changedFiles": [
+      {
+        "filename": "src/auth/__tests__/validateToken.test.ts",
+        "status": "added",
+        "additions": 58,
+        "deletions": 0,
+        "patch": "@@ -0,0 +1,58 @@\n+import { describe, it, expect } from 'vitest';\n+import { validateToken, TokenValidationError } from '../validateToken';\n..."
+      }
+    ]
+  }
+}
